@@ -114,7 +114,8 @@ Created by Tim Gibney
 	Variable | Out-File C:\File\Path\FileName.Extension
 	
 	Write-Information "Some information" 6>> C:\My\Directory\myfile.extension
-	
+#Execution Policy - run in dir where active
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
 #Test network connection
 	Test-Connection -Count 1 <computername> -Quiet			returns "True" if connected
 	
