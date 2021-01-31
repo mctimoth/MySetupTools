@@ -223,9 +223,13 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
 		git commit -am "Added index.html and index.js"
 	#check status of repo
 		git status
+#install http-server
+	npm -v
+	npm install -g http-server #-g is a global install
+	http-server #run from root directory where index.html is located - localhost:8080 to see served pages
 #node.js - Gatsby
 	install node.js from https://nodejs.org/en/download/
-	npm i(install) bootstrap
+	npm i(install) bootstrap #install on a per site (directory specific) basis
 	npm i(nstall) jquery
 	npm install -g gatsby-cli 
 	gatsby telemtry --disable
@@ -259,6 +263,8 @@ npm install chai
 # *.tmp
 # node_modules/
 
+git config --global user.email "mctimoth@gmail.com"
+git config --global user.name "Tim Gibney"
 # Configure git to use VSCode as merge tool
 git config --global merge.tool vscode
 git config --global mergetool.vscode.cmd "code --wait $MERGED"
