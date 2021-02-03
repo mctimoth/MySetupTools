@@ -44,6 +44,30 @@ Created by Tim Gibney
 	Just list the entries in the path that are in the windows directory and below:
 	(ls path).value.split(“;”) | ? {$_ -like “C:\Windows*” -or $_ -like “%systemroot%*”}
 
+#PowerShell on Ubuntu linux
+(Get-Host).Version
+# Update the list of packages
+sudo apt-get update
+# Install pre-requisite packages.
+sudo apt-get install -y wget apt-transport-https software-properties-common
+# Download the Microsoft repository GPG keys
+wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+# Register the Microsoft repository GPG keys
+sudo dpkg -i packages-microsoft-prod.deb
+# Update the list of products
+sudo apt-get update
+# Enable the "universe" repositories
+sudo add-apt-repository universe
+# Install PowerShell
+sudo apt-get install -y powershell
+# Start PowerShell
+pwsh
+$profile
+#open $profile in VS Code
+Code $profile
+#Create a new alias in $profile once open
+New-Alias "md" "mkdir"
+
 #Execute non-powershell executable if safe
 	Use the .\<executable name>
 		Sysinternals psexec
@@ -70,6 +94,16 @@ Created by Tim Gibney
 		[string]$<variable name>="some string"
 	List variable contents
 		$<variable name>
+
+#Drive space
+df #linux
+Get-PSDrive
+free #linux
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 5
+
+#Quick CPU test
+$a = 1..20000
+Measure-Command {Write-Output $a | Out-Default}
 	
 #Manage local groups remotely with Sysinternals PsExec
 	List local administrators' group members
@@ -220,22 +254,43 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
 	#add all files
 		git add .
 	#commit all adds
-		git commit -am "Added index.html and index.js"
+		git commit -am "Some descriptive text"
 	#check status of repo
 		git status
+		git show
+		git remote show
+		git remote show origin
+		git config --get remote.origin.url #or
+		git remote get-url origin
+		git config -l
+	#clone from github Internt repo - cd to local working directory first
+		git clone
+
+#Install bootstrap - done on a pre-project basis and into the project's root directory
+	npm init #makes the project an npm project - creates the package.json file
+	npm i(nstall) bootstrap #adds node_modules dir - be sure to gitignore node_modules
+	npm i(nstall) jquery
+	#use the following link in .html files depending on dev or prod
+		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+	#use the following scripts in .html files depending on dev or prod - they are order specific
+		<script src="node_modules/jquery/dist/jquery.js"></script>
+		<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
 #install http-server
 	npm -v
 	npm install -g http-server #-g is a global install
 	http-server #run from root directory where index.html is located - localhost:8080 to see served pages
+	#http server local use
+		"loopback"=="localhost"==127.0.0.1==::1 
+	#getting bootstrap version is in package.json
 #node.js - Gatsby
 	install node.js from https://nodejs.org/en/download/
 	npm i(install) bootstrap #install on a per site (directory specific) basis
 	npm i(nstall) jquery
-	npm install -g gatsby-cli 
-	gatsby telemtry --disable
-	gatsby new hello-world https://github.com/gatsbyjs/gatsby-starter-hello-world
-	gatsby new <web page name> <URL for gatsby starter>
-	gatsby develop  #starts HTTP server at localhost:8000 for whatever directory the development session is started in - Ctrl+C to end HTTP server
+	#npm install -g gatsby-cli 
+	#gatsby telemtry --disable
+	#gatsby new hello-world https://github.com/gatsbyjs/gatsby-starter-hello-world
+	#gatsby new <web page name> <URL for gatsby starter>
+	#gatsby develop  #starts HTTP server at localhost:8000 for whatever directory the development session is started in - Ctrl+C to end HTTP server
 #mocha and chai install - node and npm install required
 #install mocha and chai on a per project basis
 #at the CLI browse to the project's root directory
@@ -262,6 +317,7 @@ npm install chai
 # ~$*.docx
 # *.tmp
 # node_modules/
+# .~lock.*.* #OpenOffice on linux
 
 git config --global user.email "mctimoth@gmail.com"
 git config --global user.name "Tim Gibney"
@@ -277,58 +333,58 @@ git config --global mergetool.vscode.cmd "code --wait $MERGED"
 #turn on powerMode for a LOL
 
 #MS SQL on Ubuntu linux
-#get ubuntu version
-lsb_release -a
-#Check SQL Server status
-systemctl status mssql-server
-#stop start restart sql server
-sudo systemctl [stop|start|restart] mssql-server
-#start sqlcmd session
-sqlcmd -S localhost -U sa -P '[password]'
-#Stop and Disable mssql-server service.
-sudo systemctl stop mssql-server
-sudo systemctl disable mssql-server
-#Enable and start mssql-server service.
-sudo systemctl enable mssql-server
-sudo systemctl start mssql-server
-#install SQL Server
-sudo apt update && sudo apt upgrade
-sudo apt install mssql-server
-sudo /opt/mssql/bin/mssql-conf setup
-systemctl status mssql-server.service
-#install SQL Server Tools
-curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
-sudo apt update
-sudo apt install mssql-tools -y
-echo ‘export PATH=”$PATH:/opt/mssql-tools/bin”‘ >> ~/.bash_profile
-echo ‘export PATH=”$PATH:/opt/mssql-tools/bin”‘ >> ~/.bashrc
-source ~/.bashrc
-#install ODBC drivers
-sudo su
-curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+	#get ubuntu version
+	lsb_release -a
+	#Check SQL Server status
+	systemctl status mssql-server
+	#stop start restart sql server
+	sudo systemctl [stop|start|restart] mssql-server
+	#start sqlcmd session
+	sqlcmd -S localhost -U sa -P '[password]'
+	#Stop and Disable mssql-server service.
+	sudo systemctl stop mssql-server
+	sudo systemctl disable mssql-server
+	#Enable and start mssql-server service.
+	sudo systemctl enable mssql-server
+	sudo systemctl start mssql-server
+	#install SQL Server
+	sudo apt update && sudo apt upgrade
+	sudo apt install mssql-server
+	sudo /opt/mssql/bin/mssql-conf setup
+	systemctl status mssql-server.service
+	#install SQL Server Tools
+	curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+	sudo apt update
+	sudo apt install mssql-tools -y
+	echo ‘export PATH=”$PATH:/opt/mssql-tools/bin”‘ >> ~/.bash_profile
+	echo ‘export PATH=”$PATH:/opt/mssql-tools/bin”‘ >> ~/.bashrc
+	source ~/.bashrc
+	#install ODBC drivers
+	sudo su
+	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 
-#Download appropriate package for the OS version
-#Choose only ONE of the following, corresponding to your OS version
+	#Download appropriate package for the OS version
+	#Choose only ONE of the following, corresponding to your OS version
 
-#Ubuntu 16.04
-curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+	#Ubuntu 16.04
+	curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
-#Ubuntu 18.04
-curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+	#Ubuntu 18.04
+	curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
-#Ubuntu 20.04
-curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+	#Ubuntu 20.04
+	curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
-#Ubuntu 20.10
-curl https://packages.microsoft.com/config/ubuntu/20.10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+	#Ubuntu 20.10
+	curl https://packages.microsoft.com/config/ubuntu/20.10/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
-exit
-sudo apt-get update
-sudo ACCEPT_EULA=Y apt-get install msodbcsql17
-# optional: for bcp and sqlcmd
-sudo ACCEPT_EULA=Y apt-get install mssql-tools
-echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
-echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
-source ~/.bashrc
-# optional: for unixODBC development headers
-sudo apt-get install unixodbc-dev
+	exit
+	sudo apt-get update
+	sudo ACCEPT_EULA=Y apt-get install msodbcsql17
+	# optional: for bcp and sqlcmd
+	sudo ACCEPT_EULA=Y apt-get install mssql-tools
+	echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+	echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+	source ~/.bashrc
+	# optional: for unixODBC development headers
+	sudo apt-get install unixodbc-dev
